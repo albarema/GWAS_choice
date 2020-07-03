@@ -15,6 +15,7 @@ configfile: "config.yaml"
 ##### Modules #####
 include: "rules/gwasApproaches.smk"
 include: "rules/polyadapt.smk"
+include: "vcf2acf.smk"
 
 ## --------------------------------------------------------------------------------
 ##### Wildcards #####
