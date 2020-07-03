@@ -1,4 +1,6 @@
-NB! CURRENTLY UNDER DEVELOPMENT 
+```diff
+- NB! CURRENTLY UNDER DEVELOPMENT 
+```
 
 # Evaluating the robustness of polygenic adaptation to the coice of the GWAS cohort
 
