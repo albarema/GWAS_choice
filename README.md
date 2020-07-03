@@ -2,7 +2,7 @@
 - NB! CURRENTLY UNDER DEVELOPMENT 
 ```
 
-# Evaluating the robustness of polygenic adaptation to the coice of the GWAS cohort
+# Evaluating the robustness of polygenic adaptation to the choice of the GWAS cohort
 
 
 # A - Neutrality test for polygenic scores
