@@ -1,28 +1,43 @@
 NB! CURRENTLY UNDER DEVELOPMENT 
 
-# GWAS_choice
+# Evaluating the robustness of polygenic adaptation to the coice of the GWAS cohort
+
+
 # A - Neutrality test for polygenic scores
 
 Summary files of 30 phenotypes shared at least between 2 GWAS: 
-**wenfow**
 - phenotypes.both_sexes.tsv.gz
 
+Genomic data:
+- Run vcf2acf.smk
+
+Compute Qx statistic
+- Run polyadapt.smk 
+
 # B - Assessing different association methods
+Quality control filters:
+- Genotyped SNPs
+- MAF > 0.001
+- HWE pvalue > 1e-10
+- Autosomes
 
-Examples
-- Linear model using PLINK 2.0
+Association models - examples
+
+- Linear model implemented in PLINK 2.0
 ```bash 
 plink2
 ```
-- Mixed model using BOLT_LMM
+- Linear mixed model implemented in BOLT_LMM
 ```bash 
 plink2
 ```
-- Meta-analysis
+- Meta-analysis implemented in METAL
 ```bash 
-\\inverse variance based
+//inverse variance based
 metal
 
-\\ sample size based
+// sample size based
 metal
 ```
+
+
