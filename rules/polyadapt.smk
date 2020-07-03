@@ -63,18 +63,6 @@ rule polyAdapt_qx:
         Rscript scripts/CalcQX_edit4parallel_Alba.R -w {input.candi} -e {input.neut} -o {output.qx} -s {output.scores} -n 1000 -j 1000
         """
 
-rule polyAdapt_gbr:
-    input:
-        neut="UKBiobank/data/gwasfreqs_neutral-{level}-{pheno}.tsv",
-        candi="UKBiobank/data/gwasfreqs_candidates-{level}-{pheno}.tsv",
-        gbr="paneldir/gbr.tsv.gz"
-    output:
-        qxfm="UKBiobank/selection_UKBV2/QX_fm_report-{level}-{pheno}.txt",
-    shell:
-        """
-        Rscript scripts/CalcQX_GBR-matched_Alba.R -w {input.candi} -e {input.neut} -a {input.gbr} -n 1000 -m {output.qxfm} -j 1000
-        """
-
 rule qx_distr:
     input:
         "phenoname_qx.txt"
