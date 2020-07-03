@@ -7,14 +7,14 @@
 
 # A - Neutrality test for polygenic scores
 > Data 
-a) Summary files of 30 phenotypes shared at least between 2 GWAS
-b) Genomic data
-Allele frequencies from the 1000 Genomes Project
-- Run vcf2acf.smk
+- Summary files of 30 phenotypes shared at least between 2 GWAS
+- Genomic data: 
+  - Allele frequencies from the 1000 Genomes Project
+    - Run vcf2acf.smk
 
 > Compute Qx statistic
-Before computing polygenic scores, if you are working with more than one GWAS, make sure their effect size is polarized by the same allele (i.e.: dervied allele)
-- Run polyadapt.smk 
+- Before computing polygenic scores, if you are working with more than one GWAS, make sure their effect size is polarized by the same allele (i.e.: dervied allele)
+  -  Run polyadapt.smk 
 
 # B - Assessing different association methods
 > Quality control filters: 
