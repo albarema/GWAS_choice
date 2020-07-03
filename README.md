@@ -14,6 +14,8 @@ Genomic data:
 - Run vcf2acf.smk
 
 Compute Qx statistic
+
+*Before *
 - Run polyadapt.smk 
 
 # B - Assessing different association methods
