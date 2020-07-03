@@ -7,11 +7,8 @@
 
 # A - Neutrality test for polygenic scores
 > Data 
-
-**Summary files of 30 phenotypes shared at least between 2 GWAS: **
-- phenotypes.both_sexes.tsv.gz
-
-**Genomic data:**
+a) Summary files of 30 phenotypes shared at least between 2 GWAS
+b) Genomic data
 Allele frequencies from the 1000 Genomes Project
 - Run vcf2acf.smk
 
