@@ -18,7 +18,7 @@ Compute Qx statistic
 
 # B - Assessing different association methods
 Quality control filters:
-- Genotyped SNPs
+- Genotyped SNPs (~ 800,000)
 - MAF > 0.001
 - HWE pvalue > 1e-10
 - Autosomes
