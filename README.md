@@ -9,8 +9,20 @@ Summary files of 30 phenotypes shared at least between 2 GWAS:
 
 # B - Assessing different association methods
 
-Example
+Examples
+- Linear model using PLINK 2.0
 ```bash 
 plink2
 ```
+- Mixed model using BOLT_LMM
+```bash 
+plink2
+```
+- Meta-analysis
+```bash 
+\\inverse variance based
+metal
 
+\\ sample size based
+metal
+```
