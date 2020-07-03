@@ -9,3 +9,8 @@ Summary files of 30 phenotypes shared at least between 2 GWAS:
 
 # B - Assessing different association methods
 
+Example
+```bash 
+plink2
+```
+
