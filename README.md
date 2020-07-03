@@ -40,7 +40,8 @@ BRI="/home/bri"
 HEIGHT="/home/id_height.tsv" # tabulated file with #FID	IID	HEIGHT
 
 cd /home/white
-plink2 --bgen allind.bgen --sample allind.sample --hwe 1e-10 --maf 0.001 --keep-fam filtered_ind.list.txt --linear hide-covar --pheno $HEIGHT --covar allcov.tsv --covar-col-nums 3-4,8-27 --variance-standardize --out $WHITE
+plink2 --bgen allind.bgen --sample allind.sample --hwe 1e-10 --maf 0.001 --keep-fam filtered_ind.list.txt --linear hide-covar 
+--pheno $HEIGHT --covar allcov.tsv --covar-col-nums 3-4,8-27 --variance-standardize --out $WHITE
 ```
 - Meta-analysis implemented in METAL
 ```bash 
