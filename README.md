@@ -6,6 +6,9 @@
 
 
 # A - Neutrality test for polygenic scores
+> Workflow 
+[![INSERT YOUR GRAPHIC HERE](http://i.imgur.com/dt8AUb6.png)]()
+
 > Data 
 - Summary files of 30 phenotypes shared at least between 2 GWAS
 - Genomic data: 
