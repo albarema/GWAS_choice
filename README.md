@@ -5,15 +5,37 @@
 # Evaluating the robustness of polygenic adaptation to the choice of the GWAS cohort
 
 
-# A - Neutrality test for polygenic scores
+# A - Neutrality test for polygenic scores 
 > Workflow 
 [![INSERT YOUR GRAPHIC HERE](workflow.example.png)]()
 
+> Step 1: download all files 
+You can modify the config.yaml with your own paths and dirs
+For GRCh37, download files from:
+- epo_file: 
+```bash 
+wget ftp://ftp.healthtech.dtu.dk/public/EPO/all_hg19.epo.gz; wget ftp://ftp.healthtech.dtu.dk/public/EPO/all_hg19.epo.gz.tbi
+```
+- fai_file: 
+```bash 
+wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.fai
+```
+- lbd_blocks:
+```bash 
+wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.fai
+```
+> Step 2: Genomic data - get your vcf ready
+You can get the allele frequency of the populations of interest here (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake 
+
+```bash 
+snakemake --snakefile path/to/vcf2acf.smk --cores XX
+```
+
+More info on how to use glactools here: https://github.com/grenaud/glactools
+
 > Data 
 - Summary files of 30 phenotypes shared at least between 2 GWAS
-- Genomic data: 
-  - Allele frequencies from the 1000 Genomes Project
-    - Run vcf2acf.smk
+
 
 > Compute Qx statistic
 - Before computing polygenic scores, if you are working with more than one GWAS, make sure their effect size is polarized by the same allele (i.e.: dervied allele)
