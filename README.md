@@ -52,6 +52,8 @@ Once, the config file is ready. Run snakemake as follows:
 snakemake --snakefile path/to/vcf2acf.smk --cores XX
 ```
 
+The final output of step1 corresponds to the file under 'acf_file' in the config.yaml. This file will contain the allele frequenies for each site in each populations. Intermediate files will be deleted (remove the temp() within rules to keep them)
+
 More info on how to use glactools here: https://github.com/grenaud/glactools
 
 ### Compute Qx statistic
