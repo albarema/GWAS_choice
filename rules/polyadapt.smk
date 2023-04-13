@@ -18,23 +18,10 @@ rule betas:
 
 ## global parameters
 
-rule polar_beta:
-    input:
-        os.path.join(config['uk_dir'],"{pheno}.gwas.imputed_v3.both_sexes.tsv.gz")
-    output:
-        ungz=temp(os.path.join(config['uk_dir'], "{pheno}.flipped.byP")),
-        gz=os.path.join(config['uk_dir'], "{pheno}.flipped.byP.gz")
-    shell:
-        """
-        python scripts/FlipMinorUKB.py -i {input} -o {output.ungz} 
-        cat <(head -1 {output.ungz}) <(tail -n+2 {output.ungz}| sort -k2,2 -k3,3g) | bgzip -c > {output.gz} 
-        tabix -s 2 -b 3 -e 3 {output.gz} 
-        """
-
 
 checkpoint polyAdapt_freqs:
     input:
-        infile=os.path.join(config['uk_dir'], "{pheno}.flipped.byP.gz"),
+        infile=os.path.join(config['uk_dir'], "{pheno}.gz"),
         popfile=config['acf_file'],
         lbd=config['lbd_file']
     output:
