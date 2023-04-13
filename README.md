@@ -21,7 +21,8 @@ wget ftp://ftp.healthtech.dtu.dk/public/EPO/all_hg19.epo.gz; wget ftp://ftp.heal
 wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.fai
 
 # LBD_blocks
-# Download accordingly based on ancestry of the populations you are working with, the https://bitbucket.org/nygcresearch/ldetect-data/src/master/
+# Download accordingly based on ancestry of the populations you are working with, e.g. EUR
+wget https://bitbucket.org/nygcresearch/ldetect-data/src/master/EUR/fourier_ls-all.bed
 
 # VCF file - 1000 Genomes can be download from here: http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ 
 
