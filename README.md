@@ -53,6 +53,7 @@ snakemake --snakefile path/to/vcf2acf.smk --cores XX
 ```
 
 The final output of step1 corresponds to the file under 'acf_file' in the config.yaml. This file will contain the allele frequenies for each site in each populations. Intermediate files will be deleted (remove the temp() within rules to keep them). Output example (use glactools view to check the output):
+
 > #chr    coord   REF,ALT root    anc     GBR
 > 1      19276348        G,A     0,0:0   0,0:0   192,14:0
 
