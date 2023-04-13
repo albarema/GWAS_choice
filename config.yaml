@@ -1,6 +1,7 @@
-path_2vcf: "path/to/vcfFiles" # splitted by chrom 
+path_2vcf: "path/to/vcf/chr{chrom}.vcf.gz" # splitted by chrom. {chrom} is needed!! 
 epo_file: "path/to/EPO.gz"
 fai_file: "path/to/FAI.fai"
 lbd_file: "path/to/lbd.bed"
-pops_panel: "path/to/pops_panel.txt"
+pops_panel: "path/to/pops_panel" # two columns .txt file
 acf_file: "path/finalfile.acf.gz" #e.g. paneldir/1000GP.acf.gz
+ukb_file: "path/to/gwas_files/{pheno}.tsv.gz" # {pheno} is needed and will be use in snakemake
