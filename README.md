@@ -62,12 +62,36 @@ More info on how to use glactools here: https://github.com/grenaud/glactools
 
 Before computing polygenic scores, if you are working with more than one GWAS, make sure their effect size is polarized by the same allele (e.g.: dervied allele). 
 
-> rule 
-The first rule uses the script `scripts/acf2ukbfreq_byP.py` which currently only works for the UK Biobank. However, you can very easily modify it if you are using different summary stats. When you read 'gwasfile', you will need to make sure the column numbers and names of the variables we are interested in corresponds to those in the summary stats (eg. beta value). ONLY LINES 3-43 WILL NEED MODIFICATIONS!. 
+> rule polyAdapt_freqs
 
-> rule 
+Step1: Run `scripts/acf2ukbfreq_byP.py` to get a tabulated-file with all the info neeeded. The output is a file with the population-allele frequencies and some extra info about the variant (chr, position, alleles, beta etc.). It currently only works for the UK Biobank. However, you can very easily modify it if you are using different summary stats. When you read 'gwasfile', you will need to make sure the column numbers and names of the variables we are interested in corresponds to those in the summary stats (eg. beta value). ONLY LINES 3-43 WILL NEED MODIFICATIONS!. 
 
-  -  Run polyadapt.smk 
+>#CHROM  POS     SNPID   REF     ALT     ANC     DER     DEREFFECT       SE      PVAL GBR XXX <br>
+>1       889638  1:889638        G       C       G       C       -2.18042e-04    3.36098e-03     9.48274e-01     14,192 XXX,XXX
+
+Step 2: Run `scripts/partitionUKB_byP.py` to get the "candidate variants". It uses the output from step 1 and the LD blocks from Berisa et al, 2019. It extracts the variant with the lowest p-value for the association test in each block (if there is at least a variant that passes the genome-wide p-value threshold 5e-8). The pvalue threshold can be changes `-p 5e-08`. Output example:
+>#CHROM  POS     SNPID   DEREFFECT GBR XXX <br>
+>1       930751  1:930751        5.22061e-03 34,172 <br>
+
+Step 3: `Run scripts/extractneutral_byP.py` to get "neutral variants". You can change again the p-value for what you would like to consider "non-associated" variants similarly as in step 2 - `-p 1e-5`. The output file has the same format as in Step2. 
+>#CHROM  POS     SNPID   DEREFFECT GBR XXX <br>
+>1       958953  1:958953        1.01310e-02 54,152 <br>
+
+> rule polyAdapt_qx
+
+Step 4: `Run scripts/CalcQX_edit4parallel_Alba.R`
+
+It generates two output:
+- QX_report: it contains the PRS for each pop, the QX value, the Chi-squared pvalue, the number of trait-associated SNPs and the sign-randomised P-value.
+- PRS: two-column text file
+>POP  SCORE
+GBR 0.55
+
+```bash 
+snakemake --snakefile path/to/polyadapt.smk --cores XX
+```
+
+
 
 ## B - Assessing different association methods
 > Quality control filters: 
