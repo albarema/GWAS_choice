@@ -2,7 +2,8 @@
 suppressWarnings(suppressMessages(library("optparse")))
 suppressWarnings(suppressMessages(library(tidyverse)))
 # terminal line
-# Rscript CalcQX.R -w gwasfreqs_candidates_HEIGHT_byPPA.tsv -e gwasfreqs_neutral_HEIGHT_byPPA.tsv -o qxreport.txt -p "Han","Japanese","French","Scottish" -n 1000 -m "French" -j 1000 -s genscores.txt 
+# Rscript scripts/CalcQX_GBR-matched_Alba.R -w {input.candi} -e {input.neut} -a {input.gbr} -n 1000 -m {output.qxfm} -j 1000
+# input_gbr is a file in allele count format generated with glactools only targeting GBR population. Useful when we are working with a dataset that does not include 1000GP but we still want to use it
 
 option_list = list(
     make_option(c("-w", "--gwasfile"), type="character", default=NULL, help="GWAS input file name"),
