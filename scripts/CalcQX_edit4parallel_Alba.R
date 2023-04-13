@@ -1,13 +1,12 @@
 #!/usr/bin/env Rscript
 library("optparse")
 # terminal line
-# Rscript CalcQX.R -w gwasfreqs_candidates_HEIGHT_byPPA.tsv -e gwasfreqs_neutral_HEIGHT_byPPA.tsv -o qxreport.txt -p "Han","Japanese","French","Scottish" -n 1000 -m "French" -j 1000 -s genscores.txt 
+# Rscript CalcQX.R -w gwasfreqs_candidates_pheno.tsv -e gwasfreqs_neutral_pheno.tsv -o qxreport.txt -n 1000 -j 1000 -s genscores.txt 
 
 option_list = list(
     make_option(c("-w", "--gwasfile"), type="character", default=NULL, help="GWAS input file name"),
     make_option(c("-e", "--neutfile"), type="character", default=NULL, help="Neutral input file name"),
     make_option(c("-o", "--outfile"), type="character", default="output.txt", help="Output file name"),
-    make_option(c("-m", "--outfile2"), type="character", default="output2.txt", help="Output file name fmatch"),
     make_option(c("-p", "--pops"), type="character", default="ALL", help="Populations to be tested"),
     make_option(c("-n", "--numrep"), type="numeric", default=NULL, help="Number of sign-randomized replicates"),
     make_option(c("-j", "--emprep"), type="numeric", default=NULL, help="Number of frequency-matched replicates"),
@@ -32,11 +31,6 @@ if (is.null(opt$outfile)){
     stop("Output file name must be supplied.n", call.=FALSE)
 }
 
-if (is.null(opt$outfile2)){
-    print <- help(opt_parser)
-    stop("Output file name2 must be supplied.n", call.=FALSE)
-}
-
 if (is.null(opt$scorefile)){
     print <- help(opt_parser)
     stop("Score file name must be supplied.n", call.=FALSE)
@@ -46,9 +40,9 @@ if (is.null(opt$scorefile)){
 gwasfile <- opt$gwasfile
 neutfile <- opt$neutfile
 outfile <- opt$outfile
-outfile2 <- opt$outfile2
 scorefile <- opt$scorefile
-pops <- strsplit(opt$pops,",")[[1]]
+pops <- opt$pops
+#pops <- strsplit(opt$pops,",")[[1]]
 pseudorep <- opt$numrep
 emprep <- opt$emprep
 
@@ -58,18 +52,18 @@ leeway <- opt$leeway
 minorfreq <- opt$minorfreq
 
 
-pops <- strsplit(readLines(pops), ",")[[1]]
-# pops <- "ALL"
+#pops <- strsplit(readLines(pops), ",")[[1]]
+#pops <- c("ESN","MSL", "CEU", "TSI", "CDX", "JPT", "PEL")
 
 ObtainFreqs <- function(countdat){
-    dercounts <- apply(countdat,c(1,2),function(x){splitted <- strsplit(x,",")[[1]]; return(as.numeric(splitted[2]))})
-    totalcounts <- apply(countdat,c(1,2),function(x){splitted <- strsplit(x,",")[[1]]; return(as.numeric(splitted[2])+as.numeric(splitted[1]) )})
+    dercounts <- apply(countdat,c(1,2),function(x){splitted <- strsplit(x,",")[[1]]; return( as.numeric(splitted[2]) )})
+    totalcounts <- apply(countdat,c(1,2),function(x){splitted <- strsplit(x,",")[[1]]; return( as.numeric(splitted[2])+as.numeric(splitted[1]) )})
     dersum <- apply(dercounts,1,function(x){sum(x)})
     totalsum <- apply(totalcounts,1,function(x){sum(x)})
     totalfreq <- dersum/totalsum
     freqs <- apply(countdat,c(1,2),function(x){splitted <- strsplit(x,",")[[1]];
         return( as.numeric(splitted[2]) / (as.numeric(splitted[2])+as.numeric(splitted[1])) )})
-    return(list(as.matrix(freqs), totalfreq))
+    return(list(as.matrix(freqs), totalfreq, as.matrix(dercounts),as.matrix(totalcounts)))
 }
 
 # Trim out white space
@@ -88,6 +82,9 @@ LoadCounts <- function(filename,pops){
 
 ComputeFmat <- function(neut_leaves_freqs, neut_total_freqs){
     leaves <- colnames(neut_leaves_freqs)
+
+    #checksegneut <- which( apply(neut_leaves_freqs,1,sum)/length(leaves) < 0.95  & apply(neut_leaves_freqs,1,sum)/length(leaves) > 0.05 )
+    #neut_leaves_freqs <- neut_leaves_freqs[checksegneut,]
     checksegneut <- which(neut_total_freqs < 0.95  & neut_total_freqs > 0.05 )
     neut_leaves_freqs <- neut_leaves_freqs[checksegneut,]
     
@@ -103,14 +100,12 @@ ComputeFmat <- function(neut_leaves_freqs, neut_total_freqs){
 
     colnames(Fmat) <- colnames(neut_leaves_freqs)
     rownames(Fmat) <- colnames(neut_leaves_freqs)
-
-    #print(Fmat)
     
     return(Fmat)
 }
 
 
-ChiSquared <- function(leaves_freqs,total_freqs,effects,F_mat,randomize=FALSE){
+ChiSquared <- function(leaves_freqs,total_freqs,effects,F_mat, dercounts, totalcounts, randomize=FALSE){
     leaves <- colnames(leaves_freqs)
     checkseg <- which(total_freqs < 0.95  & total_freqs > 0.05 )
     leaves_freqs <- leaves_freqs[c(checkseg),]
@@ -123,8 +118,7 @@ ChiSquared <- function(leaves_freqs,total_freqs,effects,F_mat,randomize=FALSE){
     
     # Compute mean genetic values
     meangen <- apply(leaves_freqs * effects, 2, function(x){sum(x)})
-    #print('means')
-    #print(meangen[1:5])
+
     # Scale by average genetic value
     meangen <- (meangen - mean(meangen))
 
@@ -138,6 +132,24 @@ ChiSquared <- function(leaves_freqs,total_freqs,effects,F_mat,randomize=FALSE){
 
     meangenvec <- 2*meangen / sqrt( 4*varmean)
     
+    # Compute error PRS
+    alpha <- dercounts + 1
+	beta <- 1 + totalcounts - dercounts
+	num = alpha * beta
+	denom = (alpha+beta)^2 * (alpha+beta+1)
+	varpl = num/denom
+
+	varpl <- varpl[c(checkseg),]
+	varprs = effects^2 * varpl
+
+	varprs <- apply(varprs, 2, function(x) sum(x))
+	se = sqrt(varprs)
+
+
+	# meangen already subracted mean 
+	normcilow <- 2*(meangen-1.96*se)/sqrt(4*varmean)
+	normcihi <- 2*(meangen + 1.96*se)/sqrt(4*varmean)
+
     # Compute Q_X statistic
     numerator <- t(meangen) %*% solve(Fmat) %*% meangen
     denominator <- varmean
@@ -145,7 +157,7 @@ ChiSquared <- function(leaves_freqs,total_freqs,effects,F_mat,randomize=FALSE){
     Pval <- 1 - pchisq(Qteststat,qr(Fmat)$rank)
     allstats <- c(Qteststat,Pval)
 
-    return(list(allstats,meangenvec))
+    return(list(allstats, meangenvec, normcihi, normcilow))
 }
 
 
@@ -156,6 +168,8 @@ leaves_counts <- as.data.frame(data[,seq(5,dim(data)[2])])
 raw_leaves_freqs <- ObtainFreqs(leaves_counts)
 leaves_freqs <- raw_leaves_freqs[[1]]
 total_freqs <- raw_leaves_freqs[[2]]
+dercounts <- raw_leaves_freqs[[3]]
+totalcounts <- raw_leaves_freqs[[4]]
 effects <- as.numeric(data[,4])
 
 
@@ -180,9 +194,12 @@ Fmat <- ComputeFmat(neut_leaves_freqs, neut_total_freqs)
 
 # Calculate chi-squared statistics
 print("Computing Q_X statistic...")
-totaltest <- ChiSquared(leaves_freqs,total_freqs,effects,Fmat,randomize=FALSE)
+totaltest <- ChiSquared(leaves_freqs,total_freqs,effects,Fmat, dercounts, totalcounts, randomize=FALSE)
 totalstat <- totaltest[[1]]
 meangenvec <- totaltest[[2]]
+meangenvechi <- totaltest[[3]]
+meangenveclow <- totaltest[[4]]
+
 
 qtab <- cbind(round(totalstat[1],3),totalstat[2])
 colnames(qtab) <- c("Q_X","Pval")
@@ -194,9 +211,9 @@ write(paste(names(meangenvec),collapse="\t"),file=outfile,append=TRUE)
 write(paste(meangenvec,collapse="\t"),file=outfile,append=TRUE)
 write("",file=outfile,append=TRUE)
 
-printgenvec <- cbind(names(meangenvec),meangenvec)
+printgenvec <- cbind(names(meangenvec),meangenvec, meangenvechi, meangenveclow)
 rownames(printgenvec) <- c()
-colnames(printgenvec) <- c("#POP","SCORE")
+colnames(printgenvec) <- c("#POP","SCORE", "upperlim", "lowerlim")
 write.table(printgenvec,file=scorefile,sep="\t",row.names=FALSE,col.names=TRUE, quote=FALSE,append=FALSE)
 
 write(paste("Q_X:",qtab[1],sep="\t"),file=outfile,append=TRUE)
@@ -212,11 +229,11 @@ write("",file=outfile,append=TRUE)
 # Calculate sign-randomized chi-squared statistics
 if( !is.null(pseudorep) ){
     print(paste("Computing sign-randomized P-values, using ",pseudorep," pseudo-replicates...",sep=""))
-    totaltest <- ChiSquared(leaves_freqs,total_freqs,effects,Fmat,randomize=TRUE)
+    totaltest <- ChiSquared(leaves_freqs,total_freqs,effects,Fmat, dercounts, totalcounts, randomize=TRUE)
     totalstat <- totaltest[[1]]
     randqtab <- round(totalstat[1],3)
     for(i in seq(2,pseudorep)){
-        totaltest <- ChiSquared(leaves_freqs,total_freqs,effects,Fmat,randomize=TRUE)
+        totaltest <- ChiSquared(leaves_freqs,total_freqs,effects,Fmat, dercounts, totalcounts, randomize=TRUE)
         totalstat <- totaltest[[1]]
         randqtab <- c( randqtab, round(totalstat[1],3) )
     }
@@ -225,34 +242,6 @@ if( !is.null(pseudorep) ){
     
     write(paste("Sign-randomized P-value:",randpval,sep="\t"),file=outfile,append=TRUE)
     write("",file=outfile,append=TRUE)
-    
-}
-
-# Calculate frequency-matched chi-squared statistics
-popmatch <- c('GBR','CHB', 'FIN', 'LWK', 'PUR', 'JPT')
-for(i in popmatch){
-    
-    if( !is.null(i) & !is.null(emprep) ){
-        print(paste("Computing P-values from frequency-matched empirical distribution, using ",emprep," ",i,"-matched replicates...",sep=""))
-        allsamplestats <- sapply(seq(1,emprep),function(rep){
-            
-            sampleidx <- sapply(seq(1,dim(leaves_freqs)[1]),function(testsnp){
-                sampleset <- which( neut_leaves_freqs[,i] > leaves_freqs[testsnp,i]-leeway & neut_leaves_freqs[,i] < leaves_freqs[testsnp,i]+leeway )
-                snpidxsample <- sample( sampleset ,1)
-                return(snpidxsample)
-            })
-            
-            sample_leaves_freqs <-  neut_leaves_freqs[sampleidx,]
-            totaltest <- ChiSquared(sample_leaves_freqs,total_freqs,effects,neut_leaves_freqs,randomize=FALSE)
-            totalstat <- totaltest[[1]]
-            qstat <- totalstat[1]
-            return(qstat)
-        })
-    }
-    # Edit with adding 1
-    emppval <- (1+sum( as.numeric( allsamplestats )  > as.numeric(qtab[1]) )) / (1+length( allsamplestats ))
-    
-    write(paste("Frequency-matched P-value:",i,emppval,sep="\t"),file=outfile2,append=TRUE)
     
 }
 
