@@ -5,14 +5,14 @@
 # Evaluating the robustness of polygenic adaptation to the choice of the GWAS cohort
 
 
-# A - Neutrality test for polygenic scores 
-> Workflow 
+## A - Neutrality test for polygenic scores 
+### Workflow 
 [![INSERT YOUR GRAPHIC HERE](workflow.example.png)]()
 
-> Step 1: download all files 
-You can modify the config.yaml with your own paths and dirs
+### Step 1: download all files 
+You should modify the config.yaml with your own paths and dirs
 For GRCh37, download files from:
-- epo_file: 
+ 
 ```bash 
 # EPO file
 wget ftp://ftp.healthtech.dtu.dk/public/EPO/all_hg19.epo.gz; wget ftp://ftp.healthtech.dtu.dk/public/EPO/all_hg19.epo.gz.tbi
@@ -24,10 +24,21 @@ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.
 # Download accordingly based on ancestry of the populations you are working with, e.g. EUR
 wget https://bitbucket.org/nygcresearch/ldetect-data/src/master/EUR/fourier_ls-all.bed
 
-# VCF file - 1000 Genomes can be download from here: http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ 
+# Summary stats
+> You can find a list of traits available for the UKBB by Neale lab at: https://docs.google.com/spreadsheets/d/1kvPoupSzsSFBNSztMzl04xMoSC3Kcx3CrjVf4yBmESU/edit#gid=178908679. For instance, for height: 
+wget https://broad-ukb-sumstats-us-east-1.s3.amazonaws.com/round2/additive-tsvs/50_irnt.gwas.imputed_v3.both_sexes.tsv.bgz -O 50_irnt.gwas.imputed_v3.both_sexes.tsv.bgz
 
-> Step 2: Genomic data - get your vcf ready
-You can get the allele frequency of the populations of interest here (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake 
+# VCF file - 1000 Genomes can be download from here: 
+# http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ 
+```
+
+### Step 2: Genomic data and allele frequencies 
+You can get the allele frequency of the populations of interest here (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake. The first rule is intended to get your vcf file ready (filters at the variant- and/or individual-level).
+
+In the config file, you need to add the path/filename under 'pops_panel'. The two-columnns tab separate file has no header, first-column correspond to the sample ID and the second to the population they belong two. Example:
+```bash 
+head -n2 samples_v3.20130502.pops.panels.txt
+```
 
 ```bash 
 snakemake --snakefile path/to/vcf2acf.smk --cores XX
@@ -35,15 +46,11 @@ snakemake --snakefile path/to/vcf2acf.smk --cores XX
 
 More info on how to use glactools here: https://github.com/grenaud/glactools
 
-> Data 
-- Summary files of 30 phenotypes shared at least between 2 GWAS
-
-
-> Compute Qx statistic
-- Before computing polygenic scores, if you are working with more than one GWAS, make sure their effect size is polarized by the same allele (i.e.: dervied allele)
+### Compute Qx statistic
+Before computing polygenic scores, if you are working with more than one GWAS, make sure their effect size is polarized by the same allele (e.g.: dervied allele)
   -  Run polyadapt.smk 
 
-# B - Assessing different association methods
+## B - Assessing different association methods
 > Quality control filters: 
 
 - Genotyped SNPs (~ 800,000)
