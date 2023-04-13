@@ -9,12 +9,15 @@
 ### Workflow 
 [![INSERT YOUR GRAPHIC HERE](workflow.example.png)]()
 
+### Step 0: download softwares and packages 
 This workflow is built in snakemake. Please, download snakemake following the instructions here:
 ``` https://snakemake.readthedocs.io/en/stable/getting_started/installation.html ```
 
+Install glactools to calculate alelle frequencies for a a given population panel. Follow instructions here:
+``` https://github.com/grenaud/glactools ``` 
+
 ### Step 1: download all files 
-You should modify the config.yaml with your own paths and dirs
-For GRCh37, download files from:
+You should modify the config.yaml with your own paths and dirs. If you are working with GRCh37, download files from:
  
 ```bash 
 # EPO file
@@ -34,6 +37,7 @@ wget https://broad-ukb-sumstats-us-east-1.s3.amazonaws.com/round2/additive-tsvs/
 # VCF file - 1000 Genomes can be download from here: 
 # http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ 
 ```
+Most files for GRCh38 are also available. However, you will need to liftover the LBD_blocks files. 
 
 ### Step 2: Genomic data and allele frequencies 
 Get the allele frequency of the populations of interest (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake. The first rule is intended to get your vcf file ready (filters at the variant- and/or individual-level).
