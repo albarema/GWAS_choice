@@ -43,8 +43,10 @@ Most files for GRCh38 are also available. However, you will need to liftover the
 Get the allele frequency of the populations of interest (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake. The first rule is intended to get your vcf file ready (filters at the variant- and/or individual-level).
 
 In the config file, add the path/filename under 'pops_panel'. This is a two-columnns tab-separate file with no header, first-column correspond to the sample ID and the second to the population they belong two. Example:
-> head -n2 pops_panel_example_1000GP.txt \t
-> HG00096	GBR \t
+> head -n2 pops_panel_example_1000GP.txt
+
+> HG00096	GBR 
+
 > HG00097	GBR
 
 Once, the config file is ready. Run snakemake as follows:
