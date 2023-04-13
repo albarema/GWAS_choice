@@ -1,0 +1,5 @@
+path_2vcf: "path/to/vcfFiles" # splitted by chrom 
+epo_file: "path/to/EPO.gz"
+fai_file: "path/to/FAI.fai
+lbd_file: "path/to/lbd.bed"
+pops_panel: "path/to/pops_panel.txt"
