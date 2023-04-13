@@ -84,7 +84,7 @@ Step 4: Run `scripts/CalcQX_edit4parallel_Alba.R`
 It generates two output:
 - QX_report: it contains the PRS for each pop, the QX value, the Chi-squared pvalue, the number of trait-associated SNPs and the sign-randomised P-value.
 - PRS: two-column text file
->POP  SCORE
+>POP  SCORE <br>
 GBR 0.55
 
 ```bash 
