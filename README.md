@@ -9,6 +9,9 @@
 ### Workflow 
 [![INSERT YOUR GRAPHIC HERE](workflow.example.png)]()
 
+This workflow is built in snakemake. Please, download snakemake following the instructions here:
+``` https://snakemake.readthedocs.io/en/stable/getting_started/installation.html ```
+
 ### Step 1: download all files 
 You should modify the config.yaml with your own paths and dirs
 For GRCh37, download files from:
@@ -25,7 +28,7 @@ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.
 wget https://bitbucket.org/nygcresearch/ldetect-data/src/master/EUR/fourier_ls-all.bed
 
 # Summary stats
-> You can find a list of traits available for the UKBB by Neale lab at: https://docs.google.com/spreadsheets/d/1kvPoupSzsSFBNSztMzl04xMoSC3Kcx3CrjVf4yBmESU/edit#gid=178908679. For instance, for height: 
+# You can find a list of traits available for the UKBB by Neale lab at: https://docs.google.com/spreadsheets/d/1kvPoupSzsSFBNSztMzl04xMoSC3Kcx3CrjVf4yBmESU/edit#gid=178908679. For instance, for height: 
 wget https://broad-ukb-sumstats-us-east-1.s3.amazonaws.com/round2/additive-tsvs/50_irnt.gwas.imputed_v3.both_sexes.tsv.bgz -O 50_irnt.gwas.imputed_v3.both_sexes.tsv.bgz
 
 # VCF file - 1000 Genomes can be download from here: 
@@ -33,13 +36,14 @@ wget https://broad-ukb-sumstats-us-east-1.s3.amazonaws.com/round2/additive-tsvs/
 ```
 
 ### Step 2: Genomic data and allele frequencies 
-You can get the allele frequency of the populations of interest here (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake. The first rule is intended to get your vcf file ready (filters at the variant- and/or individual-level).
+Get the allele frequency of the populations of interest (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake. The first rule is intended to get your vcf file ready (filters at the variant- and/or individual-level).
 
-In the config file, you need to add the path/filename under 'pops_panel'. The two-columnns tab separate file has no header, first-column correspond to the sample ID and the second to the population they belong two. Example:
+In the config file, add the path/filename under 'pops_panel'. This is a two-columnns tab-separate file with no header, first-column correspond to the sample ID and the second to the population they belong two. Example:
+> pops_panel_example_1000GP.txt
 ```bash 
-head -n2 samples_v3.20130502.pops.panels.txt
+head -n2 pops_panel_example_1000GP.txt
 ```
-
+Once, the config file is ready. Run snakemake as follows:
 ```bash 
 snakemake --snakefile path/to/vcf2acf.smk --cores XX
 ```
