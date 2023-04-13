@@ -21,18 +21,17 @@ rule betas:
 
 checkpoint polyAdapt_freqs:
     input:
-        infile=os.path.join(config['uk_dir'], "{pheno}.gz"),
+        infile=config['ukb_file'],
         popfile=config['acf_file'],
         lbd=config['lbd_file']
     output:
-        freqs="UKBiobank/data/gwasfreqs-{level}-{pheno}.tsv",
-        outfile="UKBiobank/data/gwasfreqs-{level}-{pheno}.tsv.gz",
-        candi="UKBiobank/data/gwasfreqs_candidates-{level}-{pheno}.tsv",
-        neut="UKBiobank/data/gwasfreqs_neutral-{level}-{pheno}.tsv"
+        outfile="data/{panel}/gwasfreqs-{level}-{pheno}.tsv.gz",
+        candi="data/{panel}/gwasfreqs_candidates-{level}-{pheno}.tsv",
+        neut="UKBiobank/data/{panel}/gwasfreqs_neutral-{level}-{pheno}.tsv"
     shell:
         """
-        python scripts/acf2ukbfreq_byP.py  -a {input.popfile} -g {input.infile} -o {output.freqs}
-        cat <(head -1 {output.freqs}) <(tail -n+2 {output.freqs} | sort -k1,1 -k2,2g) | bgzip -c > {output.outfile}
+        python scripts/acf2ukbfreq_byP_Alba.py  -a {input.popfile} -g {input.infile} -o UKBiobank/data/{wildcards.panel}/gwasfreqs-{wildcards.level}-{wildcards.pheno}.tsv
+        cat <(head -1 UKBiobank/data/{wildcards.panel}/gwasfreqs-{wildcards.level}-{wildcards.pheno}.tsv) <(tail -n+2 UKBiobank/data/{wildcards.panel}/gwasfreqs-{wildcards.level}-{wildcards.pheno}.tsv| sort -k1,1 -k2,2g) | bgzip -c > {output.outfile}
         tabix -s 1 -b 2 -e 2 {output.outfile}
         python scripts/partitionUKB_byP.py -i {output.outfile} -b {input.lbd} -o {output.candi} -p 5e-08
         python scripts/extractneutral_byP.py -i {output.outfile} -o {output.neut} -s 20 -p 0.00001
