@@ -64,7 +64,7 @@ Before computing polygenic scores, if you are working with more than one GWAS, m
 
 **rule polyAdapt_freqs**
 
-Step1: Run `scripts/acf2ukbfreq_byP.py` to get a tabulated-file with all the info neeeded. The output is a file with the population-allele frequencies and some extra info about the variant (chr, position, alleles, beta etc.). It currently only works for the UK Biobank. However, you can very easily modify it if you are using different summary stats. When you read 'gwasfile', you will need to make sure the column numbers and names of the variables we are interested in corresponds to those in the summary stats (eg. beta value). ONLY LINES 3-43 WILL NEED MODIFICATIONS!. 
+Step1: Run `scripts/acf2ukbfreq_byP.py` to get a tabulated-file with all the info neeeded. The output is a file with the population-allele frequencies and some extra info about the variant (chr, position, alleles, beta etc.). It currently only works for the UK Biobank. However, you can very easily modify it if you are using different summary stats. When you read 'gwasfile', you will need to make sure the column numbers and names of the variables we are interested in corresponds to those in the summary stats (eg. beta value). ONLY LINES 3-43 WILL NEED MODIFICATIONS!. The output contains a new column DEREFFECT as we polarised the betas by the derived allele for compairson reasons (by default the Uk Biobank was polarised by alelel 'a1'). 
 
 >#CHROM  POS     SNPID   REF     ALT     ANC     DER     DEREFFECT       SE      PVAL GBR XXX <br>
 >1       889638  1:889638        G       C       G       C       -2.18042e-04    3.36098e-03     9.48274e-01     14,192 XXX,XXX
