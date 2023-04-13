@@ -73,13 +73,13 @@ Step 2: Run `scripts/partitionUKB_byP.py` to get the "candidate variants". It us
 >#CHROM  POS     SNPID   DEREFFECT GBR XXX <br>
 >1       930751  1:930751        5.22061e-03 34,172 <br>
 
-Step 3: `Run scripts/extractneutral_byP.py` to get "neutral variants". You can change again the p-value for what you would like to consider "non-associated" variants similarly as in step 2 - `-p 1e-5`. The output file has the same format as in Step2. 
+Step 3: Run `scripts/extractneutral_byP.py` to get "neutral variants". You can change again the p-value for what you would like to consider "non-associated" variants similarly as in step 2 - `-p 1e-5`. The output file has the same format as in Step2. 
 >#CHROM  POS     SNPID   DEREFFECT GBR XXX <br>
 >1       958953  1:958953        1.01310e-02 54,152 <br>
 
 > rule polyAdapt_qx
 
-Step 4: `Run scripts/CalcQX_edit4parallel_Alba.R`
+Step 4: Run `scripts/CalcQX_edit4parallel_Alba.R`
 
 It generates two output:
 - QX_report: it contains the PRS for each pop, the QX value, the Chi-squared pvalue, the number of trait-associated SNPs and the sign-randomised P-value.
