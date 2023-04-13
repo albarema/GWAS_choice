@@ -14,16 +14,17 @@ You can modify the config.yaml with your own paths and dirs
 For GRCh37, download files from:
 - epo_file: 
 ```bash 
+# EPO file
 wget ftp://ftp.healthtech.dtu.dk/public/EPO/all_hg19.epo.gz; wget ftp://ftp.healthtech.dtu.dk/public/EPO/all_hg19.epo.gz.tbi
-```
-- fai_file: 
-```bash 
+
+# FAI file
 wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.fai
-```
-- lbd_blocks:
-```bash 
-wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.fai
-```
+
+# LBD_blocks
+# Download accordingly based on ancestry of the populations you are working with, the https://bitbucket.org/nygcresearch/ldetect-data/src/master/
+
+# VCF file - 1000 Genomes can be download from here: http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ 
+
 > Step 2: Genomic data - get your vcf ready
 You can get the allele frequency of the populations of interest here (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake 
 
