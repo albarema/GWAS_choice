@@ -44,10 +44,8 @@ Get the allele frequency of the populations of interest (e.g.: populations from 
 
 In the config file, add the path/filename under 'pops_panel'. This is a two-columnns tab-separate file with no header, first-column correspond to the sample ID and the second to the population they belong two. Example:
 > head -n2 pops_panel_example_1000GP.txt
-
+> 
 > HG00096	GBR 
-
-> HG00097	GBR
 
 Once, the config file is ready. Run snakemake as follows:
 ```bash 
