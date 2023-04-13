@@ -17,7 +17,7 @@ Install glactools to calculate alelle frequencies for a a given population panel
 ``` https://github.com/grenaud/glactools ``` 
 
 ### Step 1: download all files 
-You should modify the config.yaml with your own paths and dirs. If you are working with GRCh37, download files from:
+You should modify the value for all keys config.yaml with your own paths and dirs (do not modify the key name unless you change it accordingly in all snakemake files). If you are working with GRCh37, download files from:
  
 ```bash 
 # EPO file
@@ -43,8 +43,7 @@ Most files for GRCh38 are also available. However, you will need to liftover the
 Get the allele frequency of the populations of interest (e.g.: populations from the 1000 Genomes Project) by running vcf2acf.smk using snakemake. The first rule is intended to get your vcf file ready (filters at the variant- and/or individual-level).
 
 In the config file, add the path/filename under 'pops_panel'. This is a two-columnns tab-separate file with no header, first-column correspond to the sample ID and the second to the population they belong two. Example:
-> head -n1 pops_panel_example_1000GP.txt
-> 
+> head -n1 pops_panel_example_1000GP.txt <br>
 > HG00096	GBR 
 
 Once, the config file is ready. Run snakemake as follows:
@@ -52,7 +51,7 @@ Once, the config file is ready. Run snakemake as follows:
 snakemake --snakefile path/to/vcf2acf.smk --cores XX
 ```
 
-The final output of step1 corresponds to the file under 'acf_file' in the config.yaml. This file will contain the allele frequenies for each site in each populations. Intermediate files will be deleted (remove the temp() within rules to keep them). Output example (use glactools view to check the output):
+The final output of step1 corresponds to the file under the key 'acf_file' in the config.yaml. This file will contain the allele frequenies for each site in each populations. Intermediate files will be deleted (remove the temp() within rules to keep them). Output example (use glactools view to check the output):
 
 > #chr    coord   REF,ALT root    anc     GBR <br>
 > 1      19276348        G,A     0,0:0   0,0:0   192,14:0
