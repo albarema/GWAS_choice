@@ -35,8 +35,8 @@ rule polar_beta:
 checkpoint polyAdapt_freqs:
     input:
         infile=os.path.join(config['uk_dir'], "{pheno}.flipped.byP.gz"),
-        popfile="paneldir/{level}-euras.clusters.acf.gz",
-        lbd=config['lbd']
+        popfile=config['acf_file'],
+        lbd=config['lbd_file']
     output:
         freqs="UKBiobank/data/gwasfreqs-{level}-{pheno}.tsv",
         outfile="UKBiobank/data/gwasfreqs-{level}-{pheno}.tsv.gz",
