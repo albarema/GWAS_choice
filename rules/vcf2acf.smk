@@ -12,7 +12,7 @@ rule filter_snps:
     Further filtering of samples should be done here (e.g.: --samples-file path/to/sampleList.txt)
     """
     input:
-        vcf=os.path.join(config['path_2vcf'], "chr{chrom}.1kg.phase3.v5a.vcf.gz"),
+        vcf=config['path_2vcf'],
     output:
         vcf="vcf/chr{chrom}_filtered.vcf.gz"
     shell:
@@ -21,7 +21,7 @@ rule filter_snps:
         bcftools index -t {output.vcf}
         """
 
-rule get_panel_galact:
+rule get_acf:
     input:
         vcf="vcf/chr{chrom}_filtered.vcf.gz",
         epofile=config['epo_file'],
@@ -33,15 +33,28 @@ rule get_panel_galact:
         glPath=config['galactools_path']
     shell:
          """
-         {params.glPath}/glactools vcfm2acf --epo {input.epofile} --fai {input.faifile} <(bcftools view {input.vcf}) > {output.tmp1}
+         {params.glPath}/glactools vcfm2acf --epo {input.epofile} --fai {input.faifile} <(bcftools view {input.vcf}) > {output.tmp1};
+         """
+		
+rule get_panel_acf:
+    input:
+        tmp1="temp_vcf_chr{chrom}.acf",
+	panelfile=config['pops_panel']
+    output:
+	tmp2=temp("temp2_vcf_chr{chrom}.acf")
+    params:
+        glPath=config['galactools_path']
+    shell:
+         """
+         {params.glPath}/glactools meld -f {input.panelfile} {input.tmp1} > {output.tmp2}
          """
 
 rule merge_galact:
     input:
-        tmp2=expand("temp_vcf_chr{chrom}.acf", chrom=CHR,allow_missing=True)
+        tmp2=expand("temp2_vcf_chr{chrom}.acf", chrom=CHR,allow_missing=True)
     output:
         acftp=temp("temp2_vcf_allchr.acf"),
-        panelfile=config["pops_panel"]
+        popfile=config['acf_file']
     params:
         glPath=config['galactools_path']
     shell:
@@ -50,3 +63,5 @@ rule merge_galact:
         cat <({params.glPath}/glactools view -h {output.acftp} | head -1) <({params.glPath}/glactools view {output.acftp}| sort -k1,1 -k2,2g) | bgzip -c > {output.popfile}
         tabix -s 1 -b 2 -e 2 {output.popfile}
         """
+
+
