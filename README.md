@@ -59,7 +59,14 @@ The final output of step1 corresponds to the file under the key 'acf_file' in th
 More info on how to use glactools here: https://github.com/grenaud/glactools
 
 ### Compute Qx statistic
-Before computing polygenic scores, if you are working with more than one GWAS, make sure their effect size is polarized by the same allele (e.g.: dervied allele)
+
+Before computing polygenic scores, if you are working with more than one GWAS, make sure their effect size is polarized by the same allele (e.g.: dervied allele). 
+
+> rule 
+The first rule uses the script `scripts/acf2ukbfreq_byP.py` which currently only works for the UK Biobank. However, you can very easily modify it if you are using different summary stats. When you read 'gwasfile', you will need to make sure the column numbers and names of the variables we are interested in corresponds to those in the summary stats (eg. beta value). ONLY LINES 3-43 WILL NEED MODIFICATIONS!. 
+
+> rule 
+
   -  Run polyadapt.smk 
 
 ## B - Assessing different association methods
