@@ -1,7 +1,3 @@
-```diff
-- NB! CURRENTLY UNDER DEVELOPMENT 
-```
-
 # Evaluating the robustness of polygenic adaptation to the choice of the GWAS cohort
 
 
@@ -92,7 +88,9 @@ snakemake --snakefile path/to/polyadapt.smk --cores XX
 ```
 
 
-
+```diff
+- NB! CURRENTLY UNDER DEVELOPMENT 
+```
 ## B - Assessing different association methods
 > Quality control filters: 
 
