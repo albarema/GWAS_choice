@@ -124,4 +124,5 @@ metal
 metal
 ```
 
+[![DOI](https://zenodo.org/badge/276843671.svg)](https://zenodo.org/doi/10.5281/zenodo.11121159)
 
